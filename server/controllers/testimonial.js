@@ -19,7 +19,7 @@ const getalltestimonial = async (req, res) => {
 const createtestimonial = async (req, res) => {
     try {
 
-        console.log(req.body.thought);
+        console.log(req.file);
         if (req.file === undefined) {
             return res.send("you must select a file.")
         }
@@ -30,7 +30,7 @@ const createtestimonial = async (req, res) => {
                 img: {
                     data: fs.readFileSync('./uploads/' + req.file.filename),
                     contentType: req.file.mimetype //'image/jpeg'
-                }
+                } 
             }
             const test = await Testimonial.create(obj)
 
