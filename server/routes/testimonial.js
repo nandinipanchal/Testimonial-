@@ -6,7 +6,8 @@ const { getalltestimonial, createtestimonial } = require('../controllers/testimo
 
 
 router.route('/').get(getalltestimonial)
-router.route('/upload', upload.single('image')).post(createtestimonial)
+router.route('/upload').post(upload.single('file'),createtestimonial)
+
 
 module.exports = router
 

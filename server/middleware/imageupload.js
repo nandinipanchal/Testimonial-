@@ -1,17 +1,27 @@
 
-const multer = require('multer')
+var multer = require('multer');
 
-const storage = multer.diskStorage({
+var storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, 'uploads')
 	},
 	filename: (req, file, cb) => {
-		cb(null, file.fieldname + '-' + Date.now())
+		
+		console.log(file)
+		var filetype = '';
+		if (file.mimetype === 'image/gif') {
+			filetype = 'gif';
+		}
+		if (file.mimetype === 'image/png') {
+			filetype = 'png';
+		}
+		if (file.mimetype === 'image/jpeg') {
+			filetype = 'jpg';
+		}
+		cb(null, file.fieldname + '-' + Date.now() + '.' + filetype);
 	}
 });
 
-const upload = multer({ storage: storage })
+var upload = multer({ storage: storage });
 
 module.exports = upload
-
-
