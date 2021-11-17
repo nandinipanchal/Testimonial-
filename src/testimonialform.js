@@ -8,7 +8,7 @@ import axios from 'axios'
 const TestimonialForm = () => {
     const [testimonial, setTestimonial] = useState({
         thought: '',
-        img: ''
+        file: ''
     })
 
     const [state, setState] = useState([])
@@ -18,8 +18,6 @@ const TestimonialForm = () => {
             return [...prevData, NewData]
         })
     }
-
-   
 
     const HandleChange = (e) => {
         const { name, value } = e.target
@@ -31,11 +29,12 @@ const TestimonialForm = () => {
                 }
             })
         }
-        else if (name === 'img') {
-            const val = e.target.files[0]
+        else if (name === 'file') {
+            const val = (e.target.files[0])
+        
             setTestimonial((prevTestimonial) => {
                 return {
-                    ...prevTestimonial, ['img']: val
+                    ...prevTestimonial, ['file']: val
                 }
             })
         }
@@ -44,18 +43,22 @@ const TestimonialForm = () => {
 
 
     const HandleSubmit = (e) => {
-        const formData = new FormData()
-        formData.append('file',state)
-        axios.post('http://localhost:5000/api/v1/upload',formData)
-        .then((res)=>{
-            console.log(res)
-        })
+
         addData(testimonial)
         setTestimonial({
             thought: '',
-            img: ''
+            file: ''
         })
-       
+        const { thought, file} = testimonial
+        
+        var formdata = new FormData()
+        formdata.append('thought',thought)
+        formdata.append('file',file, file.name)
+        console.log(formdata)
+        axios.post('http://localhost:5000/api/v1/upload',formdata)
+        .then((res)=>{
+            console.log(res)
+        })
         console.log('submit ')
         e.preventDefault()
     }
@@ -63,11 +66,12 @@ const TestimonialForm = () => {
 
 
     console.log('final data', state)
+
     return (
         <div>
             <div>
-                <form className="form-div">
-                    <p><input type="file" id="img" name="img" accept="image/*" onChange={HandleChange}></input></p>
+                <form className="form-div" encType="multipart/form-data">
+                    <p><input type="file" id="img" name="file"  onChange={HandleChange}></input></p>
                     <p><textarea placeholder="Enter testimonial" name="thought" onChange={HandleChange}></textarea></p>
                     <p className="submit-btn"><button onClick={HandleSubmit}>Submit</button></p>
                 </form>
@@ -83,7 +87,7 @@ const TestimonialForm = () => {
                                     key={1}
                                     id={index}
                                     say={item.thought}
-                                    image={item.img}
+                                    image={item.file}
                                 />
                             )
                         })
