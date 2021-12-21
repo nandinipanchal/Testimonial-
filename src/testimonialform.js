@@ -13,6 +13,10 @@ const TestimonialForm = () => {
 
     const [state, setState] = useState([])
 
+    useEffect(()=>{
+        getTestimonial()
+    },[])
+
     const addData = (NewData) => {
         setState((prevData) => {
             return [...prevData, NewData]
@@ -54,7 +58,6 @@ const TestimonialForm = () => {
         var formdata = new FormData()
         formdata.append('thought',thought)
         formdata.append('file',file, file.name)
-        console.log(formdata)
         axios.post('http://localhost:5000/api/v1/upload',formdata)
         .then((res)=>{
             console.log(res)
@@ -63,10 +66,28 @@ const TestimonialForm = () => {
         e.preventDefault()
     }
 
+    const getTestimonial = () =>{
+        axios.get('http://localhost:5000/api/v1/')
+        .then(res=>{
+            console.log(res.data.test)
+            let testimonials =[]
+            testimonials = res.data.test
+            console.log(testimonials)
+            testimonials.map(item=>{
+                var data={
+                    thought:'',
+                    img:''
+                }
+                data.thought=item.thought
+                data.img=item.img
+                addData(data)
+            })
+           
+        })
+    }
+   
 
-
-    console.log('final data', state)
-
+   
     return (
         <div>
             <div>
